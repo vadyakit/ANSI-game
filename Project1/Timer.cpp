@@ -1,62 +1,47 @@
 #include "Timer.h"
 
-TimerEvent::TimerEvent(double duration, std::function<void()>& TimerCallback)
+
+Timer::Timer(std::string name, unsigned duration)
 {
-	id++;
 	this->duration = duration;
-	this->TimerCallback = TimerCallback;
+	this->name = name;
 }
 
-bool TimerEvent::operator < (const TimerEvent& x)
+void TimerController::StartTimer()
 {
-	return duration < x.duration;
-}
-
-bool TimerEvent::operator > (const TimerEvent& x)
-{
-	return duration > x.duration;
-}
-
-void Timer::StartTimerThread()
-{
-	finish = false;
-	thr = std::thread(&Timer::StartTimer, this, time_events, std::ref(finish));
-}
-
-void Timer::StartTimer(std::vector<TimerEvent> time_events, bool& finish)
-{
-	std::sort(time_events.begin(), time_events.end());
-	std::vector<double> total_times(time_events.size());
-	double current_time;
+	std::sort(timers.begin(), timers.end());
+	std::vector<double> total_times(timers.size());
+	unsigned current_time;
 
 	while (!finish)
 	{
 		current_time = clock();
-		for (int i = 0; i < time_events.size(); i++)
+		for (int i = 0; i < timers.size(); i++)
 		{
-			if (current_time - total_times[i] >= time_events[i].duration)
+			if (current_time - total_times[i] >= timers[i].duration)
 			{
-				time_events[i].TimerCallback();
+				TimerCallback(timers[i]);
 				total_times[i] = current_time;
 			}
 		}
 	}
 }
 
-void Timer::FinishTimerThread() { finish = true; }
-
-void Timer::AddTimer(TimerEvent t_event)
+void TimerController::AddTimer(struct Timer timer)
 {
-	FinishTimerThread();
-	time_events.push_back(t_event);
-	StartTimerThread();
+	timers.push_back(timer);
 }
 
-void Timer::RemoveTimer(int id)
+void TimerController::RemoveTimer(std::string name)
 {
-	FinishTimerThread();
-	auto id_iter = std::find_if(time_events.begin(), time_events.end(), [id](const TimerEvent& x) {return x.id == id;});
-	if (id_iter == time_events.end()) throw "attempt to remove an existing timer id";
-	time_events.erase(id_iter);
-	StartTimerThread();
+	auto id_iter = std::find_if(timers.begin(), timers.end(), [name](const Timer& x) {return x.name == name;});
+	if (id_iter == timers.end()) throw "attempt to remove an existing timer id";
+	timers.erase(id_iter);
+	if (timers.size() == 0) finish = true;
+}
+
+void TimerController::RemoveAllTimers()
+{
+	finish = true;
+	timers.clear();
 }

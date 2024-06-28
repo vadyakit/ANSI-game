@@ -8,7 +8,7 @@ Player::Player()
 	controller.setOnKeyDownCallback(f);
 	f = [this](char a) {OnKeyUp(a);};
 	controller.setOnKeyUpCallback(f);
-	controller.StartEventMonitoring();
+	//controller.StartEventMonitoring();
 }
 
 void Player::OnKeyDown(char key)

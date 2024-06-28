@@ -20,7 +20,7 @@ void KeyController::setOnKeyUpCallback(std::function<void(char)> callbackFunc)
 	OnKeyUpCallback = callbackFunc;
 }
 
-void KeyController::EventMonitoring(std::function<void(char)> OnKeyDownCallback, std::function<void(char)> OnKeyUpCallback, bool& stop)
+void KeyController::StartKeyMonitoring1()
 {
 	char pred = (char)0;
 	char buf = (char)0;
@@ -56,18 +56,7 @@ void KeyController::EventMonitoring(std::function<void(char)> OnKeyDownCallback,
 	}
 }
 
-void KeyController::StartEventMonitoring()
-{
-	stop = false;
-	thr = std::thread(&KeyController::EventMonitoring, this, OnKeyDownCallback, OnKeyUpCallback, std::ref(stop));
-}
-
-void KeyController::StopEventMonitoring()
+void KeyController::StopKeyMonitoring()
 {
 	stop = true;
-}
-
-KeyController::~KeyController()
-{
-	StopEventMonitoring();
 }

@@ -1,6 +1,8 @@
 #include "Drawer.h"
 #include <iostream>
 
+#define CSI "\033["
+
 Drawer::Drawer() 
 {
 	std::cout << "\033[?25l";
@@ -63,5 +65,5 @@ void Drawer::Draw(StaticObject& g_object)
 {
 	SetCursor(g_object.Position.x, g_object.Position.y);
 
-		std::cout << g_object.GetCurrentSprite();
+		//jstd::cout << g_object.GetCurrentSprite();
 }

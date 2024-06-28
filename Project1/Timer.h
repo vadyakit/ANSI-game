@@ -1,33 +1,28 @@
 #include <vector>
+#include <string>
 #include <functional>
 #include <algorithm>
 #include <ctime>
 #include <Thread>
 #pragma once
 
-struct TimerEvent
+struct Timer 
 {
-	static inline int id{ 0 };
-	double duration;
-	std::function<void()> TimerCallback;
-
-	TimerEvent(double duration, std::function<void()>& TimerCallback);
-
-	bool operator < (const TimerEvent& x);
-	bool operator > (const TimerEvent& x);
+	std::string name;
+	unsigned duration;
+	Timer(std::string name, unsigned duration);
 };
 
-class Timer
+class TimerController
 {
-	std::thread thr;
-	std::vector<TimerEvent> time_events;
-	unsigned const max_threads = 1;
+	//static std::thread thr;
+	static std::function<void(struct Timer timer)> TimerCallback;
+	static std::vector<struct Timer> timers;
 	bool finish;
 
-	void AddTimer(TimerEvent tevent);
-	void RemoveTimer(int id);
-	void StartTimerThread();
-	void StartTimer(std::vector<TimerEvent> time_events, bool& finish);
-	void FinishTimerThread();
+	TimerController(std::function<void(struct Timer timer)> TimerCallback);
+	void AddTimer(struct Timer timer);
+	void RemoveTimer(std::string name);
+	void RemoveAllTimers();
+	void StartTimer();
 };
-

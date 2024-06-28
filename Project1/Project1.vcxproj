@@ -19,8 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ANSI_image.cpp" />
+    <ClCompile Include="CollisionDetector.cpp" />
     <ClCompile Include="Drawer.cpp" />
     <ClCompile Include="DynamicObject.cpp" />
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="KeyController.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
@@ -30,8 +33,11 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ANSI_image.h" />
+    <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="Drawer.h" />
     <ClInclude Include="DynamicObject.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="KeyController.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ResourceLoader.h" />

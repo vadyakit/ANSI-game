@@ -7,35 +7,15 @@ StaticObject::StaticObject()
 
 void StaticObject::SetPosition(unsigned x, unsigned y) 
 {
-	if (x < 0) 
-	{
-		Position.x = 0;
-	}
-	else if (y < 0) 
-	{
-		Position.y = 0;
-	}
-	else 
-	{
 		Position.x = x;
 		Position.y = y;
-	}
 }
 
-void StaticObject::SetSprites(std::string name, std::vector<unsigned> indexes)
-{
-	SpritePackName = name;
-	SpritesIndexes = indexes;
-}
-void StaticObject::SetNextSprite()
-{
-	CurrentSprite == SpritesIndexes.end() - 1 ? CurrentSprite = SpritesIndexes.begin() : CurrentSprite++;
-}
-std::string StaticObject::GetCurrentSprite()
-{
-	return SpritePack::GetSprite(SpritePackName, *CurrentSprite);
-}
-StaticObject::~StaticObject()
-{
-
-}
+int Point::scalarProduct(const Point& a) { return x * a.x + y * a.y; }
+int Point::lengthSquared() { return x * x + y * y; }
+Point Point::perpendicular() const { return Point(y, -x); }
+Point Point::operator - (const Point& a) const { return Point(x - a.x, y - a.y); }
+Point Point::operator - (const int& a) const { return Point(x - a, y - a); }
+Point Point::operator + (const Point& a) const { return Point(x + a.x, y + a.y); }
+Point Point::operator + (const int& a) const { return Point(x + a, y + a); }
+Point Point::operator * (const int& a) const { return Point(x*a,y*a); }
