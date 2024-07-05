@@ -7,6 +7,13 @@ Timer::Timer(std::string name, unsigned duration)
 	this->name = name;
 }
 
+bool Timer::operator > (const Timer& t) {
+	return duration > t.duration;
+}
+bool Timer::operator < (const Timer& t) {
+	return duration < t.duration;
+}
+
 void TimerController::StartTimer()
 {
 	std::sort(timers.begin(), timers.end());

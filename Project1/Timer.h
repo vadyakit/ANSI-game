@@ -11,13 +11,15 @@ struct Timer
 	std::string name;
 	unsigned duration;
 	Timer(std::string name, unsigned duration);
+	bool operator > (const Timer& t);
+	bool operator < (const Timer& t);
 };
 
 class TimerController
 {
 	//static std::thread thr;
-	static std::function<void(struct Timer timer)> TimerCallback;
-	static std::vector<struct Timer> timers;
+	std::function<void(struct Timer timer)> TimerCallback;
+	std::vector<struct Timer> timers;
 	bool finish;
 
 	TimerController(std::function<void(struct Timer timer)> TimerCallback);

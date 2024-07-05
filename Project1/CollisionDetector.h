@@ -12,7 +12,7 @@ class CollisionDetector
 	bool finish;
 
 	bool SingleCollisionDetect(std::vector<Point> vertices1, std::vector<Point> vertices2);
-	std::vector<int[2]> MultiCollisionDetect(std::vector<std::vector<Point>> polygons);
+	std::vector<int*> MultiCollisionDetect(std::vector<std::vector<Point>> polygons);
 
 private:
 	//std::function<void(std::vector<int[2]>)> collisionCallback;
@@ -21,7 +21,7 @@ private:
 
 	size_t indexOfFurthestPoint(std::vector<vec2> vertices, vec2 d);
 	vec2 support(std::vector<vec2> vertices1, std::vector<vec2> vertices2, vec2 d);
-	int gjk(std::vector<vec2> vertices1, std::vector<vec2> vertices2);
+	bool gjk(std::vector<vec2> vertices1, std::vector<vec2> vertices2);
 
 };
 

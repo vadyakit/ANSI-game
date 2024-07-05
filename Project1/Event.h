@@ -1,41 +1,65 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <functional>
+#include <string>
 #pragma once
 
-enum EventType
-{
-	Timer,
-	KeyDown,
-	KeyUp,
-	Collision
-};
+typedef void* EventArg;
 
-class Event
-{
-	void AddParam(void* param);
-	void AddParams(std::vector<void*> params);
-	EventType eventType;
-	time_t eventTime;
-	std::vector<void*> params;
-};
+	enum EventType
+	{
+		Timer,
+		KeyDown,
+		KeyUp,
+		KeyPressed,
+		Collision
+	};
 
-//queue with max size size
-template <typename T>
-class AQueue
-{
-	std::queue<T> queue;
-	unsigned const max_size = 100;
+	class EventArgs
+	{
+	protected:
+		const std::vector<EventArg> args;
+		EventArgs() = default;
+		EventArgs(const std::vector<EventArg>& pargs);
+		size_t size() const;
+		EventArg operator [](int i) const;
+	};
 
-public:
-	AQueue() : max_size;
-	void push(const T& elem);
-	void pop();
-	T front() const;
-	T back() const;
-};
+	class Event
+	{
+		EventArgs args;
+		EventType eventType;
+	};
 
-class EventController 
-{
-    
-};
+	//queue with max size size
+	template <typename T>
+	class AQueue
+	{
+		std::queue<T> queue;
+
+	public:
+		AQueue(unsigned maxsize);
+		void push(const T& elem);
+		void pop();
+		T front() const;
+		T back() const;
+		const unsigned max_size;
+	};
+
+	class KeyEventArgs : public EventArgs
+	{
+	public:
+		KeyEventArgs(char key);
+		char keyValue() const;
+	};
+
+	class TimerEventArgs : public EventArgs
+	{
+	public:
+		TimerEventArgs(double duration, std::string name);
+		double duration() const;
+		std::string name() const;
+	};
+
+	typedef std::function<void(EventArgs*)> EventHandler;

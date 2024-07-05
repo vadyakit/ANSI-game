@@ -1,21 +1,22 @@
 #include "CollisionDetector.h"
 
-std::vector<int[2]> CollisionDetector::MultiCollisionDetect(std::vector<std::vector<Point>> polygons)
+std::vector<int*> CollisionDetector::MultiCollisionDetect(std::vector<std::vector<Point>> polygons)
 {
-    std::vector<int[2]> res;
+    std::vector<int*> res;
     for (int i = 0; i < polygons.size(); i++) 
     {
         for (int j = i; j < polygons[i].size(); j++) 
         {
-            if (SingleCollisionDetect(polygons[i], polygons[j]))
-                res.push_back({i,j});
+            //if (SingleCollisionDetect(polygons[i], polygons[j]))
+                //res.push_back({i,j});
         }
     }
+    return res;
 }
 
 bool CollisionDetector::SingleCollisionDetect(std::vector<Point> vertices1, std::vector<Point> vertices2)
 {
-    gjk(vertices1, vertices2);
+    return gjk(vertices1, vertices2);
 }
 
 vec2 CollisionDetector::tripleProduct(vec2 a, vec2 b, vec2 c)
@@ -64,7 +65,7 @@ vec2 CollisionDetector::support(std::vector<vec2> vertices1, std::vector<vec2> v
     // subtract (Minkowski sum) the two points to see if bodies 'overlap'
     return vertices1[i] - vertices2[j];
 }
-int CollisionDetector::gjk(std::vector<vec2> vertices1, std::vector<vec2> vertices2)
+bool CollisionDetector::gjk(std::vector<vec2> vertices1, std::vector<vec2> vertices2)
 {
     size_t index = 0; // index of current vertex of simplex
     vec2 a, b, c, d, ao, ab, ac, abperp, acperp, simplex[3];
