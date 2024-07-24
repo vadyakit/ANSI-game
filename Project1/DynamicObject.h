@@ -10,8 +10,7 @@ enum class Directions
 	none
 };
 
-class DynamicObject :
-	public StaticObject
+class DynamicObject : public StaticObject
 {
 	unsigned speed;
 

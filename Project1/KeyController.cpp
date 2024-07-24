@@ -5,20 +5,9 @@
 
 KeyController::KeyController()
 {
-	OnKeyDownCallback = nullptr;
-	OnKeyUpCallback = nullptr;
 	stop = true;
 }
 
-void KeyController::setOnKeyDownCallback(std::function<void(char)> callbackFunc)
-{
-	OnKeyDownCallback = callbackFunc;
-}
-
-void KeyController::setOnKeyUpCallback(std::function<void(char)> callbackFunc)
-{
-	OnKeyUpCallback = callbackFunc;
-}
 
 void KeyController::StartKeyMonitoring1()
 {
@@ -36,19 +25,16 @@ void KeyController::StartKeyMonitoring1()
 
 			if (buf != pred)
 			{
-				if (OnKeyDownCallback != nullptr) {
-					OnKeyDownCallback(buf);
-				}
+				OnKeyDown(KeyEventArgs(buf));
 				pred = buf;
 			}
 			Sleep(20);
 		}
 		else
 		{
-			if (pred != 0) {
-				if (OnKeyUpCallback != nullptr) {
-					OnKeyUpCallback(buf);
-				}
+			if (pred != 0)
+			{
+				OnKeyUp(KeyEventArgs(buf));
 				pred = (char)0;
 			}
 		}

@@ -5,9 +5,9 @@
 Player::Player()
 {
 	std::function<void(char)> f = [this](char a) {OnKeyDown(a);};
-	controller.setOnKeyDownCallback(f);
+	//controller.setOnKeyDownCallback(f);
 	f = [this](char a) {OnKeyUp(a);};
-	controller.setOnKeyUpCallback(f);
+	//controller.setOnKeyUpCallback(f);
 	//controller.StartEventMonitoring();
 }
 

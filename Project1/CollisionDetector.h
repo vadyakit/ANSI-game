@@ -2,6 +2,7 @@
 #include <vector>
 #include <array>
 #include <functional>
+#include "Event.h"
 
 #pragma once
 
@@ -9,13 +10,14 @@ typedef struct Point vec2;
 
 class CollisionDetector
 {
+	shittEvent::EventHandler OnCollision;
+
 	bool finish;
 
 	bool SingleCollisionDetect(std::vector<Point> vertices1, std::vector<Point> vertices2);
 	std::vector<int*> MultiCollisionDetect(std::vector<std::vector<Point>> polygons);
 
 private:
-	//std::function<void(std::vector<int[2]>)> collisionCallback;
 	vec2 tripleProduct(vec2 a, vec2 b, vec2 c);
 	vec2 averagePoint(std::vector<vec2> vertices);
 

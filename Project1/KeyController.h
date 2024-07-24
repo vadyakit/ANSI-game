@@ -1,21 +1,23 @@
-#include <thread>
 #include <functional>
+#include "Event.h"
 #pragma once
+
+using namespace shittEvent;
+
 class KeyController
 {
-	//std::thread thr;
 	bool stop;
-	std::function<void(char)> OnKeyDownCallback;
-	std::function<void(char)> OnKeyUpCallback;
-	//void EventMonitoring(std::function<void(char)>, std::function<void(char)>, bool&);
+	
 
 public:
 	KeyController();
-	void setOnKeyDownCallback(std::function<void(char)>);
-	void setOnKeyUpCallback(std::function<void(char)>);
+
 	void StartKeyMonitoring1();
-	//void StartKeyMonitoring2();
+	//void StartKeyMonitoring2();s
 	void StopKeyMonitoring();
 	//~KeyController();
+
+	EventHandler OnKeyDown;
+	EventHandler OnKeyUp;
 };
 

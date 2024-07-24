@@ -1,16 +1,19 @@
 #include "Timer.h"
 
 
-Timer::Timer(std::string name, unsigned duration)
+Timer::Timer(std::string name, unsigned duration, bool isCircle) : name(name), duration(duration), isCircle(isCircle)
 {
-	this->duration = duration;
-	this->name = name;
+
 }
 
-bool Timer::operator > (const Timer& t) {
+Timer::Timer(const Timer& timer) : name(timer.name), duration(timer.duration), isCircle(timer.isCircle)
+{
+}
+
+bool Timer::operator > (const Timer& t) const {
 	return duration > t.duration;
 }
-bool Timer::operator < (const Timer& t) {
+bool Timer::operator < (const Timer& t) const{
 	return duration < t.duration;
 }
 
@@ -27,14 +30,15 @@ void TimerController::StartTimer()
 		{
 			if (current_time - total_times[i] >= timers[i].duration)
 			{
-				TimerCallback(timers[i]);
+				OnTime(TimerEventArgs(timers[i]));
 				total_times[i] = current_time;
+				if (!timers[i].isCircle) { timers.erase(timers.begin() + i); i--; }
 			}
 		}
 	}
 }
 
-void TimerController::AddTimer(struct Timer timer)
+void TimerController::AddTimer(Timer timer)
 {
 	timers.push_back(timer);
 }
@@ -42,7 +46,6 @@ void TimerController::AddTimer(struct Timer timer)
 void TimerController::RemoveTimer(std::string name)
 {
 	auto id_iter = std::find_if(timers.begin(), timers.end(), [name](const Timer& x) {return x.name == name;});
-	if (id_iter == timers.end()) throw "attempt to remove an existing timer id";
 	timers.erase(id_iter);
 	if (timers.size() == 0) finish = true;
 }
@@ -51,4 +54,14 @@ void TimerController::RemoveAllTimers()
 {
 	finish = true;
 	timers.clear();
+}
+
+TimerEventArgs::TimerEventArgs(Timer& timer)
+{
+	args.push_back(static_cast<void*>(&timer));
+}
+
+const Timer& TimerEventArgs::timerObject() const
+{
+	return *static_cast<Timer*>(args[0]);
 }

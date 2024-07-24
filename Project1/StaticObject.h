@@ -16,7 +16,6 @@ struct Point
 	int x;
 	int y;
 
-
 	int scalarProduct(const Point& a);
 	int lengthSquared();
 	Point perpendicular() const;
