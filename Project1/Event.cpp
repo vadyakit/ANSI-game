@@ -45,15 +45,6 @@ bool AQueue<T>::empty()
 	return queue.empty();
 }
 
-KeyEventArgs::KeyEventArgs(char key) : EventArgs(std::vector<EventArg>{&key}) {
-
-}
-
-char KeyEventArgs::keyValue() const
-{
-	return *static_cast<char*>(args[0]);
-}
-
 inline size_t EventArgs::size() const
 {
 	return args.size();

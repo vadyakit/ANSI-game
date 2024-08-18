@@ -61,9 +61,8 @@ void Drawer::Draw(unsigned x, unsigned y, std::vector<std::vector<char>>& skin)
 	}
 }
 
-void Drawer::Draw(StaticObject& g_object)
+void Drawer::Draw(GraphicObject& g_object)
 {
 	SetCursor(g_object.Position.x, g_object.Position.y);
-
-		//jstd::cout << g_object.GetCurrentSprite();
+		std::cout << g_object.image;
 }

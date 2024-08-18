@@ -3,6 +3,15 @@
 #include <thread>
 #include <windows.h>
 
+KeyEventArgs::KeyEventArgs(char key) : EventArgs(std::vector<EventArg>{&key}) {
+
+}
+
+char KeyEventArgs::keyValue() const
+{
+	return *static_cast<char*>(args[0]);
+}
+
 KeyController::KeyController()
 {
 	stop = true;

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <ctime>
 #include <Thread>
+#include <windows.h>
 #include "Event.h"
 #pragma once
 
@@ -17,27 +18,37 @@ public:
 	const Timer& timerObject() const;
 };
 
+using timerId = unsigned long;
+
 class Timer
 {
-public:
+	friend class TimerController;
+private:
 	std::string name;
+	static timerId last_id;
+	timerId id;
 	unsigned duration;
+public:
 	bool isCircle;
-	Timer(std::string name, unsigned duration, bool isCircle = false);
-	Timer(const Timer& timer);
+	Timer(unsigned duration, std::string name = "", bool isCircle = false);
+	timerId getId();
+	std::string getName();
 	bool operator > (const Timer& t) const;
 	bool operator < (const Timer& t) const;
 };
 
 class TimerController
 {
-	shittEvent::EventHandler OnTime;
+	shittEvent::EventHandler OnTimer;
 	std::vector<Timer> timers;
 	bool finish;
+	unsigned minDurationStep = 50; //ms
+	unsigned minStepOfTimerCheck = 50; //ms
 
 	TimerController(std::function<void(Timer timer)> TimerCallback);
 	void AddTimer(Timer timer);
 	void RemoveTimer(std::string name);
+	void RemoveTimer(timerId id);
 	void RemoveAllTimers();
 	void StartTimer();
 };

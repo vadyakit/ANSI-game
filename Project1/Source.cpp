@@ -17,26 +17,8 @@
 #include <tuple>
 using namespace std;
 
-void* vptr;
-
-class A {
-
-public:
-	int x, y;
-	A() { x = 555; y = 666; }
-};
-
-void f() {
-	A a;
-	vptr = &a;
-}
-
 int main() {
 
-	A a;
-	vptr = &a.x;
 	
-	//f();
-	//cout << (*static_cast<A*>(vptr)).x;
 	
 }

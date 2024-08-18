@@ -1,20 +1,18 @@
 #include "CollisionDetector.h"
 
-std::vector<int*> CollisionDetector::MultiCollisionDetect(std::vector<std::vector<Point>> polygons)
+void CollisionDetector::MultiCollisionDetect(std::vector<StaticObject> polygons)
 {
-    std::vector<int*> res;
     for (int i = 0; i < polygons.size(); i++) 
     {
-        for (int j = i; j < polygons[i].size(); j++) 
+        for (int j = i; j < polygons[i].verticles.size(); j++) 
         {
-            //if (SingleCollisionDetect(polygons[i], polygons[j]))
-                //res.push_back({i,j});
+            if (SingleCollisionDetect(polygons[i].verticles, polygons[j].verticles))
+                OnCollision(CollisionEventArgs(std::array<StaticObject,2>{polygons[i], polygons[i]}));
         }
     }
-    return res;
 }
 
-bool CollisionDetector::SingleCollisionDetect(std::vector<Point> vertices1, std::vector<Point> vertices2)
+bool CollisionDetector::SingleCollisionDetect(const std::vector<Point>& vertices1, const std::vector<Point>& vertices2)
 {
     return gjk(vertices1, vertices2);
 }
@@ -30,7 +28,7 @@ vec2 CollisionDetector::tripleProduct(vec2 a, vec2 b, vec2 c)
     r.y = b.y * ac - a.y * bc;
     return vec2();
 }
-vec2 CollisionDetector::averagePoint(std::vector<vec2> vertices)
+vec2 CollisionDetector::averagePoint(const std::vector<vec2>& vertices)
 {
     vec2 avg;
     for (size_t i = 0; i < vertices.size(); i++) {
@@ -41,7 +39,7 @@ vec2 CollisionDetector::averagePoint(std::vector<vec2> vertices)
     avg.y /= vertices.size();
     return avg;
 }
-size_t CollisionDetector::indexOfFurthestPoint(std::vector<vec2> vertices, vec2 d)
+size_t CollisionDetector::indexOfFurthestPoint(const std::vector<vec2>& vertices, vec2 d)
 {
     int maxProduct = d.scalarProduct(vertices[0]);
     size_t index = 0;
@@ -54,7 +52,7 @@ size_t CollisionDetector::indexOfFurthestPoint(std::vector<vec2> vertices, vec2 
     }
     return index;
 }
-vec2 CollisionDetector::support(std::vector<vec2> vertices1, std::vector<vec2> vertices2, vec2 d)
+vec2 CollisionDetector::support(const std::vector<vec2>& vertices1, const std::vector<vec2>& vertices2, vec2 d)
 {
     // get furthest point of first body along an arbitrary direction
     size_t i = indexOfFurthestPoint(vertices1, d);
@@ -65,7 +63,7 @@ vec2 CollisionDetector::support(std::vector<vec2> vertices1, std::vector<vec2> v
     // subtract (Minkowski sum) the two points to see if bodies 'overlap'
     return vertices1[i] - vertices2[j];
 }
-bool CollisionDetector::gjk(std::vector<vec2> vertices1, std::vector<vec2> vertices2)
+bool CollisionDetector::gjk(const std::vector<vec2>& vertices1, const std::vector<vec2>& vertices2)
 {
     size_t index = 0; // index of current vertex of simplex
     vec2 a, b, c, d, ao, ab, ac, abperp, acperp, simplex[3];
@@ -137,4 +135,19 @@ bool CollisionDetector::gjk(std::vector<vec2> vertices1, std::vector<vec2> verti
     }
 
     return 0;
+}
+
+CollisionEventArgs::CollisionEventArgs(std::array<StaticObject, 2>& objectsPair) : EventArgs(decltype(args){&objectsPair})
+{
+    
+}
+
+CollisionEventArgs::CollisionEventArgs(std::array<StaticObject, 2>&& objectsPair) : EventArgs(decltype(args){&objectsPair})
+{
+
+}
+
+std::array<StaticObject, 2> CollisionEventArgs::objectsPair()
+{
+    return std::array<StaticObject, 2> { (static_cast<StaticObject*>(args[0]))[0], (static_cast<StaticObject*>(args[0]))[1] };
 }

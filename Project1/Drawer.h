@@ -1,5 +1,5 @@
 #include <vector>
-#include "StaticObject.h"
+#include "GraphicObject.h"
 #pragma once
  class Drawer
 {
@@ -14,6 +14,6 @@ public:
 	static void CursorRight(unsigned lcount);
 	static void CursorLeft(unsigned lcount);
 	static void Draw(unsigned x, unsigned y, std::vector<std::vector<char>>& skin);
-	static void Draw(StaticObject& g_object);
+	static void Draw(GraphicObject& g_object);
 };
 

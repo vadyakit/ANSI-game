@@ -4,6 +4,13 @@
 
 using namespace shittEvent;
 
+class KeyEventArgs : public EventArgs
+{
+public:
+	KeyEventArgs(char key);
+	char keyValue() const;
+};
+
 class KeyController
 {
 	bool stop;

@@ -1,13 +1,18 @@
 #include "Timer.h"
 
 
-Timer::Timer(std::string name, unsigned duration, bool isCircle) : name(name), duration(duration), isCircle(isCircle)
+Timer::Timer(unsigned duration, std::string name, bool isCircle) : name(name), duration(duration), isCircle(isCircle), id(last_id++)
 {
-
 }
 
-Timer::Timer(const Timer& timer) : name(timer.name), duration(timer.duration), isCircle(timer.isCircle)
+timerId Timer::getId()
 {
+	return id;
+}
+
+std::string Timer::getName()
+{
+	return name;
 }
 
 bool Timer::operator > (const Timer& t) const {
@@ -30,11 +35,12 @@ void TimerController::StartTimer()
 		{
 			if (current_time - total_times[i] >= timers[i].duration)
 			{
-				OnTime(TimerEventArgs(timers[i]));
+				OnTimer(TimerEventArgs(timers[i]));
 				total_times[i] = current_time;
 				if (!timers[i].isCircle) { timers.erase(timers.begin() + i); i--; }
 			}
 		}
+		Sleep(minStepOfTimerCheck);
 	}
 }
 
@@ -45,8 +51,13 @@ void TimerController::AddTimer(Timer timer)
 
 void TimerController::RemoveTimer(std::string name)
 {
-	auto id_iter = std::find_if(timers.begin(), timers.end(), [name](const Timer& x) {return x.name == name;});
-	timers.erase(id_iter);
+	timers.erase( std::remove_if(timers.begin(), timers.end(), [name](const Timer& x) {return x.name == name;}) );
+	if (timers.size() == 0) finish = true;
+}
+
+void TimerController::RemoveTimer(timerId id)
+{
+	timers.erase(std::remove_if(timers.begin(), timers.end(), [id](const Timer& x) {return x.id == id; }) );
 	if (timers.size() == 0) finish = true;
 }
 

@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ANSI_image.cpp" />
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="GraphicObject.cpp" />
+    <ClCompile Include="AnimationObject.cpp" />
     <ClCompile Include="Switcher.cpp" />
     <ClCompile Include="CollisionDetector.cpp" />
     <ClCompile Include="Drawer.cpp" />
@@ -34,7 +36,9 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ANSI_image.h" />
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="GraphicObject.h" />
+    <ClInclude Include="AnimationObject.h" />
     <ClInclude Include="Switcher.h" />
     <ClInclude Include="CollisionDetector.h" />
     <ClInclude Include="Drawer.h" />

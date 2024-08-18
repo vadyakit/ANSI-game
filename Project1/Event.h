@@ -10,7 +10,6 @@
 namespace shittEvent {
 
 	class EventArgs;
-	class KeyEventArgs;
 	template <typename UnusedType> class Delegate;
 	template <typename returntype, typename ...argtypes> class Delegate <returntype(argtypes...)>;
 	template <typename T> class AQueue;
@@ -84,14 +83,6 @@ namespace shittEvent {
 		T back() const;
 		bool empty();
 		const unsigned max_size;
-	};
-
-	//представляет класс наследник для удобного интерфейса к аргументам событий клавиши
-	class KeyEventArgs : public EventArgs
-	{
-	public:
-		KeyEventArgs(char key);
-		char keyValue() const;
 	};
 
 	//Вызывает коллбэки для события либо кидает событие в очередь событий, это нужно для разделения потоков вызова и обработки 
