@@ -1,11 +1,17 @@
 #include "Timer.h"
 
+#include <mutex>
 
-Timer::Timer(unsigned duration, std::string name, bool isCircle) : name(name), duration(duration), isCircle(isCircle), id(last_id++)
+
+Timer::Timer(unsigned duration, const std::string& name, bool isCyclic)
 {
+	this->name = name;
+	this->duration = duration;
+	this->id = last_id++;
+	this->isCyclic = isCyclic;
 }
 
-timerId Timer::getId()
+timerId Timer::getId() const
 {
 	return id;
 }
@@ -18,53 +24,74 @@ std::string Timer::getName()
 bool Timer::operator > (const Timer& t) const {
 	return duration > t.duration;
 }
-bool Timer::operator < (const Timer& t) const{
+bool Timer::operator < (const Timer& t) const {
 	return duration < t.duration;
 }
 
-void TimerController::StartTimer()
+void TimerController::start()
 {
-	std::sort(timers.begin(), timers.end());
-	std::vector<double> total_times(timers.size());
-	unsigned current_time;
+restart:
+	restart = false;
+	isRun = true;
+	finish = false;
 
-	while (!finish)
+	std::sort(timers.begin(), timers.end());
+
+	unsigned currentTime;
+
+	while (1)
 	{
-		current_time = clock();
-		for (int i = 0; i < timers.size(); i++)
+		currentTime = clock();
+		for (auto i = timers.begin(); i != timers.end(); ++i)
 		{
-			if (current_time - total_times[i] >= timers[i].duration)
+			if (currentTime - lastCheckTime >= (*i).duration)
 			{
-				OnTimer(TimerEventArgs(timers[i]));
-				total_times[i] = current_time;
-				if (!timers[i].isCircle) { timers.erase(timers.begin() + i); i--; }
+				OnTimer(TimerEventArgs((*i)));
+				if (!(*i).isCyclic)
+				{
+					timers.erase(i); --i;
+				}
 			}
 		}
+		lastCheckTime = currentTime;
 		Sleep(minStepOfTimerCheck);
+		if (restart) goto restart;
+		if (finish) break;
 	}
+	isRun = false;
+	finish = true;
 }
 
-void TimerController::AddTimer(Timer timer)
-{
-	timers.push_back(timer);
-}
-
-void TimerController::RemoveTimer(std::string name)
-{
-	timers.erase( std::remove_if(timers.begin(), timers.end(), [name](const Timer& x) {return x.name == name;}) );
-	if (timers.size() == 0) finish = true;
-}
-
-void TimerController::RemoveTimer(timerId id)
-{
-	timers.erase(std::remove_if(timers.begin(), timers.end(), [id](const Timer& x) {return x.id == id; }) );
-	if (timers.size() == 0) finish = true;
-}
-
-void TimerController::RemoveAllTimers()
+void TimerController::stop()
 {
 	finish = true;
+	while (isRun)
+		Sleep(1);
+}
+
+void TimerController::addTimer(const Timer& timer)
+{
+	timers.push_back(timer);
+	restart = true;
+}
+
+void TimerController::removeTimersByName(std::string name) //async
+{
+	timers.erase(std::remove_if(timers.begin(), timers.end(), [name](const Timer& x) {return x.name == name; }));
+	restart = true;
+}
+
+void TimerController::removeTimerById(timerId id)
+{
+	timers.erase(std::remove_if(timers.begin(), timers.end(), [id](const Timer& x) {return x.id == id; }));
+	restart = true;
+}
+
+void TimerController::removeAllTimers()
+{
+	stop();
 	timers.clear();
+	restart = true;
 }
 
 TimerEventArgs::TimerEventArgs(Timer& timer)

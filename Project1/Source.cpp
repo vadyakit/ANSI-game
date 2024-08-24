@@ -19,6 +19,10 @@ using namespace std;
 
 int main() {
 
-	
-	
+	list<int> a{1,2,3,4,5,6,7};
+	list<int>::iterator iter;
+	iter = a.begin();
+	cout << *iter;
+	a.erase(a.begin());
+	cout << *iter;
 }
